@@ -1,0 +1,47 @@
+\documentclass[11pt,a4paper]{article}
+% Modèle de rapport de stage et conseils de rédaction, mise en page...
+% L. Bellon, avril 2010
+
+\usepackage{tabularx} % gestion avancée des tableaux
+\usepackage{shortcut}
+\usepackage{theme}
+
+
+\begin{document}
+
+\include{first_page.tex}
+
+% Pas d'entéte ni de pied pour la page de sommaire
+\thispagestyle{empty}
+\section*{Remerciements}
+
+\tableofcontents
+\newpage
+
+% Première page du rapport
+\setcounter{page}{1}
+
+% on rétablit l'indentation automatique en début de paragraphe
+\setlength{\parindent}{16pt}
+
+\section{Introduction}
+%présenter le reinforcement learning, les applications, les limites actuelles
+
+
+\include{related_work.tex}
+
+\include{personal_work.tex}
+
+\section{Conclusion et perspectives}
+
+\section{Bibliographie}
+
+\section{Annexes éventuelles.}
+\nocite{*}
+
+\newpage
+
+\bibliography{citation} 
+\bibliographystyle{ieeetr}
+
+\end{document}

@@ -1,0 +1,44 @@
+% définition des marges du document
+\setlength{\topmargin}{0cm}
+\setlength{\headheight}{0.4cm}
+\setlength{\headsep}{0.8cm}
+\setlength{\footskip}{1cm}
+\setlength{\textwidth}{17cm}
+\setlength{\textheight}{25cm}
+\setlength{\voffset}{-1.5cm}
+\setlength{\hoffset}{-0.5cm}
+\setlength{\oddsidemargin}{0cm}
+\setlength{\evensidemargin}{0cm}
+
+\usepackage{psfrag} % remplacement du texte d'une figure ps par du texte latex
+\usepackage{sistyle} % mise en forme des unités
+
+\usepackage{color} % gestion de différentes couleurs
+
+\definecolor{linkcolor}{rgb}{0,0,0.6} % définition de la couleur des liens pdf
+\usepackage[ pdftex,colorlinks=true,
+pdfstartview=FitV,
+linkcolor= linkcolor,
+citecolor= linkcolor,
+urlcolor= linkcolor,
+hyperindex=true,
+hyperfigures=false]
+{hyperref} % fichiers pdf 'intelligents', avec des liens entre les références, etc.
+
+\usepackage{fancyhdr} % entêtes et pieds de pages personnalisés
+
+% définition de l'entête et du pied de page
+\pagestyle{fancy}
+\fancyhead[L]{\scriptsize \textsc{Titre du rapport}}
+\fancyhead[R]{\scriptsize \textsc{Alexandre Marthe}}
+\fancyfoot[C]{ \thepage}
+
+% commande d'annulation du correcteur typographique du package [francais]{babel} qui force l'espace avant ':' (parfois utile pour la bibliographie)
+\makeatletter
+\@ifpackageloaded{babel}%
+        {\newcommand{\nospace}[1]{{\NoAutoSpaceBeforeFDP{}#1}}}%  % !! double {{}} pour cantonner l'effet à l'argument #1 !!
+        {\newcommand{\nospace}[1]{#1}}
+\makeatother
+
+% commande de déplacement d'un objet
+\newcommand{\drawat}[3]{\makebox[0pt][l]{\raisebox{#2}{\hspace*{#1}#3}}}

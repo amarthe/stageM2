@@ -1,0 +1,7 @@
+admin/*
+python/*
+rapport/modèle\ Rapport_Stage/*
+rapport/rapport.*
+!rapport/rapport.tex
+!rapport/rapport.pdf
+rapport/*.aux

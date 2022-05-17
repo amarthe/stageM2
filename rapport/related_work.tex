@@ -1,0 +1,504 @@
+\section{Related work}
+
+[introduction to reinforcement learning]
+
+\subsection{Markov Decision Process}
+We will first start by introducing the general framework of Markov Decision Process (MPD) and the basic results on dynamic programming.
+
+\begin{definition}[Markov Decision Process and Dynamic Programming]
+An MPD is a tuple $\MM(\XX, \AAA, P, R, \gamma)$, where $\XX$ is a finite state space, $\AAA$ a finite action space, $P$ a transition kernel, $R$ a stochastic reward, and $\gamma$ the discount
+\end{definition}
+
+a policy $\pi$ is a mapping from $\XX$ to probability distribution on $\AAA$.
+
+We are interested in the total reward: 
+
+\[ \EE{\sum_{t=0}^\infty  \gamma^t r(x_t, a_t)} \]
+
+\paragraph{Policy Evaluation:} The first problem when considering a MPD, is being able to evaluate a policy, \ie compute the total reward obtained when following the policy. For this we introduce the Value function $V^\pi$ (resp. $Q^\pi$) which consist in the expected total reward with $\pi$ and starting at state $x$ (resp. starting at state $x$ and with action $a$) :
+
+\begin{definition}
+The Value function and the Q-value function (also called action-state value function) are defined by:
+\[ V^\pi(x) = \EE{\sum_{t=0}^\infty  \gamma^t r(x_t, a_t) | x_0 = x}  \]
+\[ Q^\pi(x,a) = \EE{\sum_{t=0}^\infty  \gamma^t r(x_t, a_t) | x_0 = x, a_0 = a}  \] 
+with $x_t \sim p(\cdot | x_{t-1}, a_{t-1})$ and $a_t \sim \pi(\cdot | x_t)$
+\end{definition}
+
+By manipulating the expressions, we can see that those two function verify the following equation called Bellman equation:
+
+\begin{align}
+V^\pi(x) &= \sum_{a \in \AAA} \pi(a|x) \left( \EE{r(x,a)} + \gamma \sum_{x^\prime  \in \XX} p(x^\prime |x,a)V^\pi(x^\prime ) \right) \\
+Q^\pi(x,a) &= \EE{r(x,a)} + \gamma \sum_{x^\prime ,a^\prime  \in \XX \times \AAA} p(x^\prime |x,a)\pi(a^\prime |x^\prime )Q^\pi(x^\prime ,a^\prime )
+\end{align}
+
+This suggests to introduce of the Bellman Operator:
+
+\begin{definition}[Bellman Operator]
+Let $V: \XX \mapsto \RR$ or $Q: \XX \times \AAA \mapsto \RR$, $\pi$ a policy. The Bellman operator $\TT^\pi$ is defined by:
+\[ \forall x \in \XX, \qquad \TT^\pi V(x) = \sum_{a \in \AAA} \pi(a|x) \left( \EE{r(x,a)} + \gamma \sum_{x^\prime  \in \XX} p(x^\prime |x,a)V(x^\prime ) \right) \]
+\[ \forall x,a \in \XX \times \AAA, \qquad \TT^\pi Q(x,a) = \EE{r(x,a)} + \gamma \sum_{x^\prime ,a^\prime  \in \XX \times \AAA} p(x^\prime |x,a)\pi(a^\prime |x^\prime )Q(x^\prime ,a^\prime ) \]
+\end{definition}
+
+This operator happens to be a contraction (describe more)… policy evaluation algorithm
+
+\paragraph{Control:} The second problem is to find a policy that maximizes the expected return. For that we introduce the optimal value functions:
+%define optimal policy
+
+\[ \sta V(x) = \max_{\pi} \EE{\sum_{t=0}^\infty  \gamma^t r(x_t, a_t) | x_0 = x} \]
+\[ \sta Q(x,a) = \max_{\pi} \EE{\sum_{t=0}^\infty  \gamma^t r(x_t, a_t) | x_0 = x, a_0 = a} \] 
+
+Those functions satisfy the optimal version of the Bellman Equation:
+\begin{align}
+\sta V(x) & = \max_{a \in \AAA} \EE{r(x,a)} + \gamma \sum_{x^\prime  \in \XX} p(x^\prime |x,a)\sta V(x^\prime ) \\
+\sta Q(x,a) & = \EE{r(x,a)} + \gamma \sum_{x^\prime  \in \XX} p(x^\prime |x,a)\max_{a^\prime  \in \AAA}\sta Q(x^\prime ,a^\prime )
+\end{align}
+
+We can then introduce an optimal version of the Bellman Operator:
+
+\begin{definition}[Optimal Bellman Operator]
+Let $V: \XX \mapsto \RR$ or $Q: \XX \times \AAA \mapsto \RR$, $\pi$ a policy. The Bellman operator $\sta \TT$ is defined by:
+\[ \forall x \in \XX, \qquad \sta\TT V(x) = \max_{a \in \AAA} \EE{r(x,a)} + \gamma \sum_{x^\prime  \in \XX} p(x^\prime |x,a)\sta V(x^\prime ) \]
+\[ \forall x,a \in \XX \times \AAA, \qquad \sta \TT Q(x,a) = \EE{r(x,a)} + \gamma \sum_{x^\prime  \in \XX} p(x^\prime |x,a)\max_{a^\prime  \in \AAA}\sta Q(x^\prime ,a^\prime ) \]
+\end{definition}
+
+This operator is also a contraction (describe more)… Value iteration algorithm
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+
+\subsection{Metrics}
+
+[introduire]
+
+\subsubsection*{Wasserstein Metric}
+
+\begin{definition}[\cite{rowland_analysis_2018}]
+    Let $p \geq 1$ and $\PPPP_p(\RR)$ the space of distributions with finite $p^{\text{th}}$ moment. Let $\nu_1, \nu_2 \in \PPPP_p(\RR)$ and $\Lambda(\nu_1, \nu_2)$ the set of distribution on $\RR^2$ with marginals $\nu_1$ et $\nu_2$. The p-Wasserstein distance $d_p$ is then defined as :
+
+    \[ d_p(\nu_1, \nu_2) = \left( \inf_{\lambda \in \Lambda(\nu_1, \nu_2)} \int_{\RR^2} |x-y|^p \ \dd\lambda(x,y) \right)^{\frac{1}{p}}\]
+
+    Let $\eta_1, \eta_2 \in \PPPP_p(\RR)^{\XX \times \AAA}$. We also define the supremum-p-Wasserstein distance $\overline{d}_p$ by:
+
+    \[ \overline{d}_p(\eta_1,\eta_2) = \sup_{(x,a) \in \XX \times \AAA} d_p(\eta_1^{(x,a)}, \eta_2^{(x,a)})\]
+\end{definition}
+
+We also have another expression to compute that distance.
+
+%définir la norme associé à une variable aléatoire (Bellemare)
+\begin{lemma}[\cite{bellemare_distributional_2017}]
+    Let $\nu_1, \nu_2 \in \PPPP_p(\RR)$ with respective cumulative distribution $F$ and $G$. Let $\UU$ be a uniform random variable on $[0,1]$. then 
+
+    \[ d_p(\nu_1, \nu_2) = \norm{F^{-1}(\UU) - G^{-1}(\UU)}_p \]
+    %\[ d_p(\nu_1, \nu_2) = \EE{\left(F^{-1}(\UU) - G^{-1}(\UU)\right)^p}^{\frac{1}{p}} \]
+
+    which, in the case $p < \infty$ simplifies to:
+
+    \[ d_p(\nu_1, \nu_2) = \left(\int_0^1\left|F^{-1}(u) - G^{-1}(u)\right|^p du\right)^{\frac{1}{p}} \]
+
+\end{lemma}
+
+
+the $w_1$ is the most used, and has a dual form [to invertigate for quantiles]
+
+\paragraph{Cramer Distance:}
+
+\begin{definition}[\cite{rowland_analysis_2018}]
+    Let $\nu_1, \nu_2 \in \PPPP(\RR)$. We define the family of metrics $\ell_p$ by :
+
+    \[ \ell_p(\nu_1, \nu_2) = \left( \int_\RR (F_{\nu_1}(x) - F_{\nu_2}(x))^p \dd x\right)^{\frac{1}{p}} \]
+
+    $\ell_2$ is called the Cramer distance.
+
+    We also define the suppremum version of the $\ell_p$ norm:
+    \[ \overline{\ell}_p(\eta_1,\eta_2) = \sup_{(x,a) \in \XX \times \AAA} \ell_p(\eta_1^{(x,a)}, \eta_2^{(x,a)})\]
+\end{definition}
+
+\begin{remark}
+    $l_1 = d_1$
+\end{remark}
+\begin{proof}
+    argument de symétrie de graphe
+\end{proof}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Distributional Reinforcement Learning}
+%parler des résultats obtenus, pour motiver l’introduction de la notion, en plus de donner plus de possibilité sur le choix de l’optimisation.
+
+In 2017, Bellemare et al. introduces the Distributional Reinforcemennt Learning framework. The idea is to compute the full distribution of the return instead of just the expected return. In his paper, they introduce the distributional Bellman operators and prove theoretical results on their properties.
+\\%souligner en bleu à cause de retour à la ligne juste après une grosse expression qui prend plusieurs lignes.
+
+The random return is the sum of the discounted random reward:
+
+\begin{equation}
+    Z(x,a) = \sum_{t = 0}^{\infty} \gamma R_t \ |\ X_0 = x, A_0 = a
+\end{equation}
+
+The idea is that the distribution of the reward would follow similar Bellman equations:
+
+\begin{equation}\label{randvarbellman}
+    Z(x,a) \deq R(x,a) + \gamma Z(X^\prime, A^\prime)
+\end{equation}
+
+with $X^\prime, A^\prime$ the random next state-action. 
+
+\subsubsection*{Policy Evaluation}
+Let’s consider a policy $\pi$. The distribution of the random return under $\pi$ will be written as follows:
+
+\[ \eta_\pi^{(x,a)} = \text{Law}_\pi \left( \sum_{t = 0}^{\infty} \gamma R_t \ | \ X_0 = x, A_0 = a \right) \]
+
+and we will write $\eta_\pi$ as the collection of distribution $(\eta_\pi^{(x,a)})_{(x,a) \in \XX \times \AAA}$.\\
+
+What makes the distributional framework worth studying, is the generalization of the Bellman equation and its properties:
+The random return associated to policy $\pi$ verifies the \emph{distributional Bellman equation}:
+\[\eta_\pi = \TT^\pi \eta_\pi \]
+where $\TT^\pi$ is the Bellman operator defined by:
+
+\[
+    \TT^\pi \eta^{(x,a)} = \int_\RR \sum_{(x^\prime,a^\prime)\in \XX \times \AAA} (f_{r,\gamma})_\#\eta^{(x^\prime,a^\prime)}\pi(a^\prime|x^\prime)p(r,x^\prime|x,a)dr
+\]
+
+with $(f_{r,\gamma})_\#\eta$ is the pushforward measure define by $f_\#\eta(A) = \eta(f^{-1}(A))$ for all Borel sets $A\subseteq R$ and $f_{r,\gamma}(x) = r + \gamma x$ for all $x \in R$.
+\begin{proof}
+    \text{[faire la preuve]}
+\end{proof}
+
+While this operator seems more cumbersome that the non-distributional one, it just comes down to rewriting equation \ref{randvarbellman} for distributions. The proof use the exact same idea as in the non-distributional case, but in this new formalism. \\
+
+In the tabular case, it is possible to solve this fixed point equation by matrix inversion. However, it doesn’t seem possible to do so when dealing with distribution. To solve it, we will use the following result, that is same used to solve the non-tabular non-distributional case.
+
+Similarly as in the non-distributional case, this operator is a $\gamma$-contraction under a well chosen metric: the maximal $p$-Wasserstein metric $\overline{d}_p$ (for $p \geq 1$).
+\begin{proof}[Preuve:]
+    \text{[faire la preuve]}
+\end{proof}
+
+This result is very important in the sense where it gives an theoretical algorithm to compute the value distribution of a policy. [+ distributional augments classical RL]
+
+\[ \forall \eta \in \PPPP(\RR)^{\XX \times \AAA}, \quad (\TT^\pi )^n \eta \underset{n \rightarrow \infty}{\longrightarrow} \eta_\pi \]
+
+The Wasserstein metric is important here because the same operator is not always a contraction under the total variation distance, the Kolmogorov distance or the Kullback-Liebler divergence. (ref in article de Bellemare)
+
+Even though this algorithm seems promising, there are several issues that arise in practice, that make it difficult to implement: It is impossible to represent exactly all the space of distributions, which requires a parametrisation of the distribution and a projection step, then we most of the time don’t have access to the exact transition of the MDP, which requires a stochastic estimation of the Bellman Operator. Those issues will be tackled in the next subsections.
+
+\subsubsection*{Control} 
+Here, the goal still is to find an optimal policy. However, we will consider the full distributions of return to reach it.
+
+We define by optimal distribution a distribution associated to an optimal policy: $\sta\eta \in \{ \eta_{\sta\pi} \ | \ \sta\pi \in \argmax_{\pi} \EEE{R \sim \eta_\pi}{R}\}$.
+One of the first difference that we notice is the fact that there can be several different optimal distribution. Those optimal distribution all have the same mean, but a distribution having the optimal mean may not be an optimal distribution, because some distributions may not come from any (stationary) policy. [mettre les exemples]
+ 
+
+As expected, the optimal distributions verify the optimal distributional Bellman equation: $\sta\eta = \TT\sta\eta$ with 
+
+\[
+    \TT\eta^{(x,a)} = \int_\RR \sum_{(x^\prime,a^\prime)\in \XX \times \AAA} (f_{r,\gamma})_\#\eta^{(x^\prime,\sta a(x^\prime))}p(r,x^\prime|x,a)dr
+\]
+where $\sta a(x^\prime) = \argmax_{a^\prime \in \AAA} \EEE{R \sim \eta^{(x^\prime, a^\prime)}}{R}$
+\begin{proof}
+    \text{[insert proof here]}
+\end{proof}
+
+The first interesting Control result is the fact that this operator is a contraction in average:
+
+\begin{lemma}
+    Let $\eta_1, \eta_2 \in \PPPP(\RR)^{\XX\times\AAA}$, we write $\EE{\eta}:= \EEE{Z \sim \eta}{Z}$. Then:
+    \[ \norm{\EE{\TT\eta_1} - \EE{\TT\eta_2}}_\infty \leq \gamma \norm{\EE{\eta_1} - \EE{\eta_2}}_\infty \]  
+
+    Which means that $\EE{\TT^n \eta} \underset{n \rightarrow \infty}{\longrightarrow} \sta Q$ exponentially quickly.
+\end{lemma}
+\begin{proof}
+    to redact
+\end{proof}
+
+As before this leads to a theoretical algorithm to find the optimal value function using the whole distribution. We have another result regarding the convergence of the distribution itself:
+
+\begin{theorem}
+    Let $\XX$ and $\AAA$ be finite. Let $\eta \in \PPPP(\RR)^{\XX\times\AAA}$. Assume that there is a single policy $\sta \pi$. Then: 
+    
+    \[\TT^n \underset{n \rightarrow \infty}{\longrightarrow} \eta_{\sta \pi} \text{ uniformly in } \overline{d}_p, \ p\geq1\]
+\end{theorem}
+\begin{proof}
+    see Bellemare
+\end{proof}
+
+This theorem is very important to understand how distributions behave. At first it seems really convenient, with the convergence of the distribution, but there are especially two points which are worth emphasizing. The first one is that there is no exponential convergence anymore and, in fact, the speed of the convergence is unknown. The second is the condition of unicity of optimal policy. While this condition seems reasonable, it is still possible to do without, at the cost of stationarity: if there are several optimal policy, the distribution converges uniformly to one associated to a possibly nonstationary optimal policy.
+
+The non stationarity of the optimal policy isn’t an issue when the goal is solely to maximize the mean reward, as the greedy policy associated to its distribution will still be optimal. However, it can be more problematic if we try to find policy that takes acount of the whole distribution, such a safer or riskier policy. [ajuster avec papier de Achab et Neu]\\
+
+The two previous properties are weaker that what we found in the Policy Evaluation case. To emphasize more on the differences, here are some more results that underline the pathologic cases that arise in Distributional Control:
+
+\begin{proposition}
+    The optimality operators are not always contractions.
+\end{proposition}
+[look for the argument for any metric]
+
+\begin{proposition}
+    The optimality operators do not always have fixed points.
+\end{proposition}
+
+\[ \text{[insert contre exemple here]} \]
+
+The lack of contraction is the precise result that prevents us to get the same properties as in the non-distributional case or as in the distributional, especially the existence and unicity of a fixed point, and the exponential convergence.
+
+[detailler un peu plus] [faire l’analyse plus poussée du contre-exemple ? pour améliorer le résultat en rajoutant certaines contraites ?]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Distribution Parametrization}
+
+One of the main issue when dealing with distribution in practice, is the question of representation. It is not possible for a computer to represent the full extent of the distribution space. It is then necessary to restrain ourself on a parametrized space.
+
+In their papers, \cite[Morimura et al.]{morimura_parametric_2012} decide to parametrize the return distribution as a Gaussian, a Laplace or a skewed Laplace distribution. Later, \cite[Bellemare et al.]{bellemare_distributional_2017} and then \cite[Dabney et al.]{dabney_distributional_2017} developed the theory for a richer class of parametric distributions, discrete ones, that are much more convenient. There two main approaches for that: the categorical approach, and the quantile regression approach.
+
+\subsubsection*{Categorical}
+
+This is the approach introduced by \cite[Bellemare et al.]{bellemare_distributional_2017} which led to the C51 algorithm that reached state of the art result for ALE. However, the theoretical properties of such approach were mainly developed later, by \cite[Rowland et al.]{rowland_analysis_2018}.
+
+The idea is to use the hypothesis of bounded reward to use evenly spread diracs on that reward support, and use the diracs weight as the parameters.
+
+\[\text{[illustration]}\]
+
+More formally, let’s consider $V_{\textsc{min}}, V_{\textsc{max}}$ the bounds for the reward, $N$ the number of diracs (the resolution) to use, $\Delta z = \frac{V_{\textsc{max}} - V_{\textsc{min}}}{N - 1}$ the steps between diracs. The support of the distributions will be $\{ z_i = V_{\textsc{\textsc{min}}} + i\Delta z \ |\ 0 \leq i < N \}$. The parametric family then is $\{ \sum_{i=0}^{N-1} q_i\delta_{z_i}  \ |\ \sum_{i=0}^{N-1} q_i = 1,\ 0\leq q_i \leq 1\}$.\\
+
+%    We define the stochastic distributional Bellman operator $\hat\TT$ by :
+%    \begin{align*}
+%        (\hat\TT^\pi \eta_t)^{(x_t,a_t)} &= (f_{r_t,\gamma})_\#\eta_t^{%(x_{t+1}, \sta a)}\\
+%        (\hat\TT^\pi \eta_t)^{(x,a)} &= \eta_t^{(x,a)} \qquad \text{if} (x,a) \neq (x_t, a_t)
+%    \end{align*}
+%    with $\sta a$ sampled from $\pi(\cdot|x_{t+1})$.
+
+We define the projection operator $\Pi_C : \PPPP(\RR) \rightarrow \PPP_C$ by :
+
+\begin{equation}
+    \Pi_C(\delta_y) = 
+    \begin{cases}
+        \delta_{z_0} & y \leq z_0\\
+        \frac{z_{i+1}-y}{z_{i+1}-z_{i}}\delta_{z_i} + \frac{y - z_i}{z_{i+1}-z_{i}}\delta_{i+1} & z_i < y < z_{i+1}\\
+        \delta_{z_{N-1}} & y \geq z_{N-1}
+    \end{cases}
+\end{equation}
+[explain what is the idea behind it + illustration]
+
+Bellemare et al. introduced this projection step as an heuristic, without any theoretical motives or results related to the Wasserstein metric. It is Rowland et al. that later, found deep connection between this projection and another metric: the Cramer distance.
+
+In fact, for the Wasserstein metric, we have the following result.
+\begin{proposition}
+    $\Pi_C\TT^\pi$ is not a contraction for $\overline{d}_p$ with $p > 1$.
+\end{proposition}
+\begin{proof}
+    to copy
+\end{proof}
+For the case $p=1$ it is however true, but only because it is the same as the $\ell_p$ distance, for which we have much more properties:
+
+\begin{proposition}
+    For a specific subset of $\PPPP(R)$ and appropriate Hilbert space structure with $\ell_2$, $\Pi_C$ is the orthogonal projection of that subset onto $\PPP_C$
+\end{proposition}
+[projection particularly relevant + relevance of the other metric]
+\begin{proposition}
+    $\Pi_C\TT^\pi$ is a $\sqrt[p]\gamma$-contraction in $\overline{\ell}_p$.
+\end{proposition}
+
+\begin{proof}
+    to do
+\end{proof}
+The Banach fixed point theorem thus provides with a proof a convergence of the iterated projected Bellman operators:
+
+\begin{equation}\label{ProjBellmanCatConv}
+    \exists ! \eta_C \in \PPP_C^{\XX \times \AAA}, \ \forall \eta_0 \in \PPPP(\RR)^{\XX \times \AAA},\quad (\Pi_C\TT^\pi)^m\eta_0 \underset{m \rightarrow \infty}{\longrightarrow} \eta_C \quad \text{exponentially quickly in } \overline{\ell}_p
+\end{equation}
+
+
+It is important to notice that this does not have to converge to $\eta_\pi$, for the simple reason that this operator is convergent in the parametrized space $\PPP_C$, which may not contain $\eta_\pi$. The question that arises next, is how well does $\eta_C$ approximates $\eta_\pi$. 
+
+\begin{lemma}
+    Let $\eta_C$ defined as in (\ref{ProjBellmanCatConv}). Assume that $\eta_\pi$ is supported on $[z_0, z_{N-1}]$. Then:
+    \[ \overline{\ell}_2(\eta_C, \eta_\pi) \leq \frac{1}{1-\gamma} \Delta z \]
+\end{lemma}
+
+[result that we want + increase in resolution get us closer][case when no garantuee on the reward]
+
+\subsubsection*{Quantile regression}
+
+This approach was first introduced by \cite[Dabney et al.]{dabney_distributional_2017} and led to the \textsc{QR-DQN} algorithm that outperformed C51.
+
+The idea is to do the opposite of the categorical approach: instead of having fixed reward support with variable weight, it considers fixed weight for variable support.
+
+\[ \text{[illustration]} \]
+
+More formally, let’s consider $N$ the resolution. The parametric family is $\{ \frac{1}{N} \sum_{i = 0}^{N-1} \delta_{z_i} \ | \ (z_i)\in \RR^n \}$\\
+
+As the Wasserstein metric seems to be a metric of choice for this framework, it seems natural to try to project a distribution on the parametrized space by minimizing the Wasserstein distance between both.
+In this subsection we will use the 1-Wasserstein distance. The projection operator $\Pi_{d_1} : \PPPP(\RR) \rightarrow \PPP_Q$ is thus defined by:
+
+\begin{equation}
+    \Pi_{d_1}\nu = \argmin_{\nu_Q \in \PPP_Q} d_1(\nu, \nu_Q)
+\end{equation}
+
+This is actually possible to compute, and the minimizers are exactly :
+
+\[ \Pi_{d_1}\nu = \frac{1}{N} \sum_{i = 0}^{N-1} \delta_{z_i}, \quad F_\nu(z_i) = \frac{2i + 1}{2N} \]
+
+where $F$ is the cumulative distribution funcition of $\nu$.
+\begin{proof}
+    to copy
+\end{proof}
+
+\[\text{[illustration/exemple]}\]
+
+\begin{proposition}
+    $\Pi_{d_1}\TT^\pi$ is $\gamma$-contraction in $\overline{d}_\infty$ :
+
+    \[ \overline{d}_\infty(\Pi_{d_1}\TT^\pi\eta_1 , \Pi_{d_1}\TT^\pi\eta_2) \leq \gamma \overline{d}_\infty(\eta_1, \eta_2)\]
+\end{proposition}
+\begin{proof}
+    
+\end{proof}
+
+[comment (about the implications of the results and about the norm)]
+
+
+[faire la comparaison entre des deux : quantile regression utilise moins de paramètres et de conditions, mais les résultats sont pas exactement les mêmes.]
+
+\subsubsection*{Diatomic AVaR}
+
+[Achab et Neu, motives about keeping the mean]
+
+\subsection{Quantile Optimization}
+
+
+Issues with greedy policy for implementation (Defourny 2008)    
+
+
+\subsubsection*{Quantile}
+
+[Morimura et al.]
+
+\subsubsection*{Superquantile}
+
+[results by Achab et Neu]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+\subsection{unformal Distributional Approach (with random variable)[TO REMOVE]}
+
+\paragraph{Policy Evaluation:} 
+
+We here want to look at the full distribution of the return when following a certain policy $\pi$. We define the random return as follow (recall that $R$ is a stochastic reward):
+
+\begin{definition}[Value distribution function]
+The random value function associated with policy $\pi$ is defined as follow:
+\[ \VV^\pi(x) = \sum_{t=0}^\infty  \gamma^t R(x_t, a_t) \qquad x_0 = x \]
+\[ \QQQ^\pi(x,a) = \sum_{t=0}^\infty  \gamma^t R(x_t, a_t) \qquad x_0 = x, a_0 = a \] 
+with $x_t \sim p(\cdot | x_{t-1}, a_{t-1})$ and $a_t \sim \pi(\cdot | x_t)$
+\end{definition}
+
+By doing the same computation as in the expected reward case, we notice that the value distribution functions verifies an extended version of the Bellman equation:
+
+\begin{align}
+\VV^\pi(x) & = \sum_{a \in \AAA} \pi(a|x) \left( R(x,a) + \gamma \sum_{x^\prime  \in \XX} p(x^\prime |x,a)\VV^\pi(x^\prime ) \right) \\
+\QQQ^\pi(x,a) & = R(x,a) + \gamma \sum_{x^\prime ,a^\prime  \in \XX \times \AAA} p(x^\prime |x,a)\pi(a^\prime |x^\prime )\QQQ^\pi(x^\prime ,a^\prime )
+\end{align}
+
+This leads to the distributional Bellman operator:
+
+\begin{definition}[Distributional Bellman Operator]
+\[ \forall x \in \XX, \qquad \TT^\pi \VV(x) = \sum_{a \in \AAA} \pi(a|x) \left( R(x,a) + \gamma \sum_{x^\prime  \in \XX} p(x^\prime |x,a)\VV(x^\prime ) \right) \]
+\[ \forall x,a \in \XX \times \AAA, \qquad \TT^\pi \QQQ(x,a) = R(x,a) + \gamma \sum_{x^\prime ,a^\prime  \in \XX \times \AAA} p(x^\prime |x,a)\pi(a^\prime |x^\prime )\QQQ(x^\prime ,a^\prime ) \]
+\end{definition}
+
+Due to the distribution persepective, it is not possible to solve for the fixed point equation with a matrix inversion anymore. But the following result still enable theoretical computation of the exact random value distribution:
+
+\begin{lemma}
+    $\TT$ is a $gamma$-contraction in $d_p$
+\end{lemma}
+
+leads to an algorithm to find the compute the distribution
+
+\paragraph{Control:}
+
+\begin{definition}[Optimal Value distribution function]
+    \[ \sta \VV \in \{\VV^{\sta\pi} \in \argmax_\pi \EE{\VV^\pi}\} \]
+    \[ \sta \QQQ \in \{\QQQ^{\sta\pi} \in \argmax_\pi \EE{\QQQ^\pi}\} \]  
+\end{definition}
+
+This distribution also verify an extended version of the Optimal Bellman Equation:
+
+\[ \sta \VV(x) =  R(x,\sta a(x)) + \gamma \sum_{x^\prime  \in \XX} p(x^\prime |x,\sta a(x))\sta V(x^\prime ) \]
+\[ \sta \QQQ(x,a) = R(x,a) + \gamma \sum_{x^\prime  \in \XX} p(x^\prime |x,a)\sta Q(x^\prime ,\sta a(x)) \]
+
+and leads to the optimal bellman operator:
+
+\begin{definition}[Optimal Distributional Bellman Operator]
+    \[ \forall x \in \XX, \qquad \sta\TT \VV(x) = R(x,\sta a(x)) + \gamma \sum_{x^\prime  \in \XX} p(x^\prime |x,\sta a(x)) V(x^\prime ) \]
+    \[ \forall x,a \in \XX \times \AAA, \qquad \sta \TT \QQQ(x,a) = R(x,a) + \gamma \sum_{x^\prime  \in \XX} p(x^\prime |x,a) Q(x^\prime ,\sta a(x)) \]
+\end{definition}
+
+However, this operator is not a contraction (see Bellemare 2017). But we still have some practical theoretical results: contraction in mean. Also, convergence in sequence of optimal policy (details ?)

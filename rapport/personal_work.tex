@@ -1,0 +1,57 @@
+\section{Travail de recherche et résultats}
+
+\subsection{Quantile}
+In this part, we are going to change the goal, and try to maximise a quantile of the distribution, instead of the mean. Indeed, sometimes we may have specific applications where the mean doesn’t matter so much, but where it is very important to have a safe policy, i.e. to have higher quantiles, even at the cost of lower mean. In the same way, it can be interesting to find more risky behavior on some environment, with higher possible reward, but at the cost of failing more often. 
+
+Quantile Optimization is a topic well studied in finance, in the framework of portfolios. However very few tackled this issue in the case of MDP. In their paper \cite[Morimura et al.]{morimura_parametric_2012} try to apply their first distributional approach on an Q-learning algorithm trying to optimise quantiles. Even though they obtained empirically promising results, no theoretical results have been obtained se far. A main reason for that is because quantiles are particularly hard to compute. Fearless, we will still try to tackle this topic.\\
+
+First it is important to notice that, as the goal changed, many assumptions that were made in the original case are to be studied again in this case. The theory as to be redone from 0.
+
+
+\subsubsection*{Framework}
+
+We are still considering MDPs of the form $\MM(\XX,\AAA, P,R, \gamma)$, but with another value to optimize. We consider $x \in \XX$ a specific state, and $\tau \in [0,1]$ the quantile of interest. Our objective is:
+
+    \[\max_\pi V_\tau(x) = q_\tau\left(\sum_{t = 0}^{\infty} \gamma R_t \ |\ X_0 = x\right) \]
+
+In the \emph{average} framework, we try to optimize for every single state and action. However, in this new case, it is not possible as optimizing for a specific state may require to lower the quantiles for the next states.
+
+\[ \text{insert contre exemple} \]
+
+This first result is particularly probematic since every method previously used would mainly profit of this property with the mean, optimizing every state separately.
+ 
+\subsubsection*{Policy Evaluation}
+
+The first question, just as before, is how to evaluate a policy. Let $\pi$ a policy. We want to compute:
+
+\[ Q_\tau(x,a) = q_\tau\left(\sum_{t = 0}^{\infty} \gamma R_t \ |\ X_0 = x, A_0 = a, \pi\right) \]
+
+When working with the mean, we would profit of its linearity to find an equation verified by this quantity, and solve this equation. Here, there is no linearity. In fact, is not even possible to compute a quantile solely knowing the quantiles for the next statest and action. We require the full distribution of the reward and the full distribution of reward and next state-action return. 
+
+Luckily, with the development of the distributional approach, we have a 
+way to compute the full distribution of the return for a specific policy. And once the distribution is known, so is the quantile.\\
+
+In the case where it only requires a finite number of (distributional) Bellman operator application to get the exact distribution, we get to compute the quantile exactly. This happens for instance in MDP that ends after a finite number of steps.\\
+
+if
+
+\[\exists k \in \NN,\ \forall \eta_0 \in \PPPP(\RR)^{\XX \times \AAA}, (\TT^\pi)^k\eta_0 = \eta_\pi \] 
+then
+\[ \forall \eta_0 \in \PPPP(\RR)^{\XX \times \AAA}, q_\tau\left((\TT^\pi)^k\eta_0\right) = q_\tau(\eta_\pi)\]
+
+In the general case, even though we have the convergence of the distribution,it may not be enough for the convergence of the quantile.
+
+\[ (\TT^\pi )^n \eta \underset{n \rightarrow \infty}{\longrightarrow} \eta_\pi \quad \nRightarrow \quad q_\tau\left((\TT^\pi )^n \eta\right) \underset{n \rightarrow \infty}{\longrightarrow} q_\tau(\eta_\pi)  \]
+
+We would need at least point-wise convergence of the cumulative distribution function.
+
+\[ \text{[counter exemple for Wasserstein metric]} \]
+
+\subsubsection*{Control}
+
+different questions arise: deterministic policy (surement oui, mais trouver une preuve? bellman equation ? easy way to policy evaluate except by computing the whole distribution ? Existance of a optimal policy for every state ? How to control (take max on what ?) ? Une policy iteration augmente forcément le q10 ?
+petit résultat: pour un simple mdp: tout un ensemble de policy optimal, dont une deterministic, mais si on veut en plus maximiser la mean, il faut du undeterministic
+
+\subsubsection*{Quantiles and distribution parametrization}
+
+The 1-Wasserstein metric (equivalent to $\ell_1$) works well with as minimizing it leads to the quantiles of the distribution
