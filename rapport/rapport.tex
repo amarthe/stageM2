@@ -10,10 +10,11 @@
 \begin{document}
 
 \include{first_page.tex}
-
+ 
 % Pas d'entéte ni de pied pour la page de sommaire
 \thispagestyle{empty}
-\section*{Remerciements}
+\section*{Acknowledgment}
+I would like to first thank Aurelien Garivier for supervising me, guiding me throughout all the internship, but also for invitation to the summer school and the statistical conference. I got the opportunity to meet many people working close to my research area, and to discover tangent research subjects. I would also like to thank the team I was with at the ENS, Antoine, Aymen and Hugues, with who I shared many great moment, be it social or studious. And finally I would also like to thank the UMPA team as a whole, for welcoming me and making me immediatly feel at ease in the lab.
 
 \tableofcontents
 \newpage
@@ -21,23 +22,22 @@
 % Première page du rapport
 \setcounter{page}{1}
 
-% on rétablit l'indentation automatique en début de paragraphe
+% on rétablit l'indentation automatique en début de paragraphe 
 \setlength{\parindent}{16pt}
 
-\section{Introduction}
-%présenter le reinforcement learning, les applications, les limites actuelles
+\include{introduction.tex}
 
-
-\include{related_work.tex}
-
+\include{rel_work_rl.tex}
+\include{rel_work_distr.tex}
 \include{personal_work.tex}
+%faire une section impression ? (du style, ce qui s’est passé en pratique, les difficultés…)
+\section{Conclusion}
+As our first contributions, we implemented a little python librairy to experiment in an easy way with Distributional Reinforcement Learning  (the code is available at https://github.com/amarthe/stageM2). This is the code used to obtain all the results mentioned in the report and, using the same parameters, they should all be reproductible. In practical point of view, this code helped illustrated how the usual tabular algorithms behaved in that new Framework, and helped us understand better the framework in general. We also contributed on the theory, by proving results and exhibiting counter-examples. We showed that Dynamic Programming was not possible on this kind of framework, when it was only assumed before, and we partly proved a conjecture stating that deterministic policy are suffiencient, which hadn’t be questioned before.
 
-\section{Conclusion et perspectives}
+The internship was also the opportunity to try evaluate how difficult working with quantile was, and that in the future it would be better to work with difference quantities such as the expectile, which displays much better properties.\\
 
-\section{Bibliographie}
+For the futur, there could be different ways to continue this work further. The first one would indeed be to prove or disprove the conjecture on deterministic optimal policies. Ideally it would also be to find algorithms with theoretical guarantees to evaluate and optimize the quantiles, but the theory seem currently to far behind for it to be possible. Another one would be to re-do the work of the internship but with expectiles, and improving the results further.
 
-\section{Annexes éventuelles.}
-\nocite{*}
 
 \newpage
 

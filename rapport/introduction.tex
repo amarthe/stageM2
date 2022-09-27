@@ -1,0 +1,23 @@
+\section{Introduction}
+%présenter le reinforcement learning, les applications, les limites actuelles
+
+%intro ML
+In the last decade, Machine Learning has become a major field of interest in current scientific research, and has allowed for uncountable technological breakthroughs. Its techniques allows for automisation of many task that usually had to be done by hand by a human. We can find its application everywhere in today’s world. Its strengh is to be able to solve complex problems for which we don’t know an exact solution, by learning through examples and/or training. The main challenges of the field is to find what can be learned, and how it can be learned. Depending on the kind of tasks we want to solve, there are different subdomain of Machine Learning. In this report, we will focus on what is called \emph{Reinforcement Learning}.
+
+%intro RL
+Reinforcement Learning is the subfield that investigates how to learn and adapt in real time. The principle is the same as how humans learn to do certain tasks: through trials and errors. It’s for instance the paradigm used in recommandation systems or in the programs that beat humans in board games such as Chess or Go.
+The main ideas are quite old\cite{bellman1966dynamic}\cite{bertsekas2012dynamic}, but it gained a lot of hype when it started being associated with deep learning methods, which made it scalable to real world applications. Among the breakthroughs that brought a lot of interest in the field, we can find the development of Deepmind’s Alphago, an algorithm that beat the world’s best Go players, one of the last board games on which humans were still better than machines. Reinforcement Learning methods have been increasingly popular in many different domains, such as scheduling, robot control and telecommunications.
+
+%principle of RL
+All those algorithms work on the same principle: optimizing a reward. Similarly to what happens in our brain, where our actions are mainly chosen in a way to maximise the dopamine produced, the algorithms chose actions depending on which will give the best reward. In the example of Chess or Go, the algorithm will receive a positive reward when winning the game, and a penalty when loosing. It could also be designed so that it gain/loses reward when taking/losing a piece. The reward is usually defined by hand depending on the objective. It is then for the algorithm to find the best sequence of actions in order to maximize the reward.
+
+%Sensitive RL
+However, in many real world applications, the reward can be stochastic (for instance with only partial observation of the context) and thus, performing the same sequence of actions may not always lead to the same reward. This is why most of the research focus the maximisation of the expected reward, which works very well in practice.
+Though, some Reinforcement Learning algorithms can also be found in quite sensitive applications, like software driving autonomous vehicles. The issues with those software is that depending on the action chosen and the context, there could be incidents, such as a car crash and or death of person. As this should be avoided as much as possible, it is mandatory to make the safest algorithm possible. Doing so by defining specific rewards is particularly difficult, as it’s most of the time impossible to predict the exact behavior of the algorithm solely with the rewards. This justifies a need of research in minimizing some risks in Reinforcement Learning. This branch is called Risk-sensitive Reinforcement Learning, and is almost as old as the first formalization of Reinforcement Learning.
+\\%s’inspirer de morimura
+
+%intro distributionnal and risk-sensitive RL
+There are different approaches in Risk-Sensitive RL. The one that we will get interest in have been tried the first time by \cite{morimura_parametric_2012}[Morimura et al.], which will be detailed later.
+\\
+
+In this report we will start by recalling the main results in Reinforcement Learning for known environement, later we will sum up some of the latest advancement in Distributional RL. We will then use those results to try to understand how the theory changes when the optimization is done on a different quantity, such as the quantile. Our goal is to undertand how the behaviors differ, and what founding results remain or disappear.

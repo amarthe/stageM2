@@ -1,0 +1,7 @@
+Projection, Vmin, Vmax, resolution, iterations of bellman
+gamma = 0.9
+greedy : categorical, -30, 10, 150, 50
+safe : categorical, -15, 10, 100, 50
+safe2 : categorical, -30, 10, 150, 50
+
+Les autres, gamma = 0.99
